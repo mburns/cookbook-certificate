@@ -1,6 +1,11 @@
 language: ruby
 rvm:
-  - 2.1.5 
-install: bundle install --without integration 
+  - 2.2.5
+  - 2.3.1
+
+install: bundle install --without integration
+
 script:
- - bundle exec rake
+  - bundle exec rspec --default-path spec
+  - bundle exec foodcritic -f any .
+  - bundle exec rubocop

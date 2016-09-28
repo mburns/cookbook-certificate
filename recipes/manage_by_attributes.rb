@@ -20,7 +20,7 @@
 # limitations under the License.
 
 node['certificate'].each do |cert|
-  cert.each_pair do |id, opts|
+  cert.each_slice(2) do |id, opts|
     Chef::Log.debug "Create certs #{id} from attribute"
     certificate_manage id do
       action :create

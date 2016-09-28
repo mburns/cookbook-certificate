@@ -1,25 +1,33 @@
 ---
-driver_plugin: vagrant
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
 
 platforms:
-- name: ubuntu-12.04
-- name: ubuntu-10.04
-- name: centos-6.6
-- name: centos-5.11
+  - name: ubuntu-14.04
+  - name: ubuntu-12.04
+  - name: ubuntu-10.04
+  - name: centos-7.2
+  - name: centos-6.8
+  - name: centos-5.11
+  - name: fedora-21
+  - name: fedora-22
 
 # This suite should always fail, because we do not
 # support vault on chef-solo.  Keeping this kitchen file
 # separate until there is some chef failure verifier
 suites:
-- name: vault
-  data_bag_path: "test/integration/vault/data_bags"
-  run_list: ["recipe[certificate::manage_by_attributes]"]
-  attributes:
-    certificate: [
-      test: {
-        data_bag_type: 'vault',
-        nginx_cert: true,
-        cert_file: "test.pem",
-        key_file: "test.key"
-      }
-    ]
+  - name: vault
+    data_bag_path: "test/integration/vault/data_bags"
+    run_list:
+      - recipe[certificate::manage_by_attributes]
+    attributes:
+      certificate:
+        test: {
+          data_bag_type: 'vault',
+          nginx_cert: true,
+          cert_file: "test.pem",
+          key_file: "test.key"
+        }

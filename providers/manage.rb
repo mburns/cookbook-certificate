@@ -47,9 +47,8 @@ action :create do
     Chef::Application.fatal!('Vault type encryption not supported with chef-solo') if Chef::Config['solo']
     ssl_item =
       begin
-        chef_gem 'chef-vault'
-        require 'chef-vault'
-        ChefVault::Item.load(new_resource.data_bag, new_resource.search_id)
+        include_recipe 'chef-vault'
+        chef_vault_item(new_resource.data_bag, new_resource.search_id)
       rescue ChefVault::Exceptions::KeysNotFound, ChefVault::Exceptions::SecretDecryption
         begin
           Chef::DataBagItem.load(new_resource.data_bag, new_resource.search_id)
@@ -59,7 +58,7 @@ action :create do
         end
       end
   else
-    fail "Unsupported data bag type #{new_resource.data_bag_type}"
+    raise "Unsupported data bag type #{new_resource.data_bag_type}"
   end
 
   next if ssl_item.nil?
@@ -67,13 +66,13 @@ action :create do
   if new_resource.combined_file
     cert_file_resource ::File.join(new_resource.cert_path, new_resource.cert_file),
                        "#{ssl_item['cert']}\n#{ssl_item['chain']}\n#{ssl_item['key']}",
-                       :private => true
+                       private: true
     next
   end
 
   if new_resource.create_subfolders
     cert_directory_resource 'certs'
-    cert_directory_resource 'private', :private => true
+    cert_directory_resource 'private', private: true
   end
 
   if new_resource.nginx_cert
@@ -82,7 +81,7 @@ action :create do
     cert_file_resource new_resource.certificate, ssl_item['cert']
     cert_file_resource new_resource.chain, ssl_item['chain']
   end
-  cert_file_resource new_resource.key, ssl_item['key'], :private => true
+  cert_file_resource new_resource.key, ssl_item['key'], private: true
 end
 
 def cert_directory_resource(dir, options = {})
@@ -102,7 +101,7 @@ def cert_file_resource(path, content, options = {})
     owner new_resource.owner
     group new_resource.group
     mode(options[:private] ? 00640 : 00644)
-    variables :file_content => content
+    variables file_content: content
     only_if { content }
     sensitive new_resource.sensitive if respond_to?(:sensitive)
   end

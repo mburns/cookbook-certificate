@@ -1,11 +1,15 @@
 Encoding:
-  Enabled: False
+  Enabled: false
 LineLength:
   Max: 200
 HashSyntax:
-  Enabled: False
+  Enabled: false
 Style/RescueModifier:
   Enabled: false
+RedundantSelf:
+  Exclude:
+    - 'recipes/manage_by_attributes.rb'
 AllCops:
   Exclude:
   - '.kitchen/*'
+  - 'providers/manage.rb'
