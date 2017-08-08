@@ -67,7 +67,7 @@ action :create do
   if new_resource.combined_file
     cert_file_resource ::File.join(new_resource.cert_path, new_resource.cert_file),
                        "#{ssl_item['cert']}\n#{ssl_item['chain']}\n#{ssl_item['key']}",
-                       :private => true
+                       :private => true, :strict => new_resource.strict_key_perms
     next
   end
 
@@ -82,7 +82,7 @@ action :create do
     cert_file_resource new_resource.certificate, ssl_item['cert']
     cert_file_resource new_resource.chain, ssl_item['chain']
   end
-  cert_file_resource new_resource.key, ssl_item['key'], :private => true
+  cert_file_resource new_resource.key, ssl_item['key'], :private => true, :strict => new_resource.strict_key_perms
 end
 
 def cert_directory_resource(dir, options = {})
@@ -101,7 +101,7 @@ def cert_file_resource(path, content, options = {})
     cookbook new_resource.cookbook
     owner new_resource.owner
     group new_resource.group
-    mode(options[:private] ? 00640 : 00644)
+    mode(options[:private] ? (options[:strict] ? 00600 : 00640) : 00644)
     variables :file_content => content
     only_if { content }
     sensitive new_resource.sensitive if respond_to?(:sensitive)

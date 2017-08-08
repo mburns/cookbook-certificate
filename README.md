@@ -168,6 +168,7 @@ The LWRP resource attributes are as follows.
   * `group` - The file group owner, defaults to root
   * `cookbook` - The cookbook containing the erb template, defaults to certificate
   * `create_subfolders` - Enable/disable auto-creation of private/certs subdirectories.  Defaults to true
+  * `strict_key_perms` - If `true`, sets the key file to 600 instead of 640 for programs with strict key permission checking. Defaults to `false`
 
 #### providers
 
