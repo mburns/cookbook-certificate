@@ -31,7 +31,7 @@ actions :create
 # :search_id is the Data Bag object you wish to search.
 attribute :data_bag, :kind_of => String, :default => 'certificates'
 attribute :data_bag_secret, :kind_of => String, :default => Chef::Config['encrypted_data_bag_secret']
-attribute :data_bag_type, :kind_of => String, :equal_to => ['unencrypted', 'encrypted', 'vault'], :default => 'encrypted'
+attribute :data_bag_type, :kind_of => String, :equal_to => ['unencrypted', 'encrypted', 'vault', 'hashicorp-vault'], :default => 'encrypted'
 attribute :search_id, :kind_of => String, :name_attribute => true
 attribute :ignore_missing, :kind_of => [TrueClass, FalseClass], :default => false
 
@@ -65,6 +65,9 @@ attribute :group, :kind_of => String, :default => 'root'
 
 # Cookbook to search for blank.erb template
 attribute :cookbook, :kind_of => String, :default => 'certificate'
+
+attribute :hashicorp_vault_address, :kind_of => String, :default => 'https://127.0.0.1:8200'
+attribute :hashicorp_vault_token, :kind_of => String, :default => 'abcd-1234'
 
 # Accesors for determining where files should be placed
 def certificate

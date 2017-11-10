@@ -58,6 +58,16 @@ action :create do
           nil
         end
       end
+  when 'hashicorp-vault'
+    ssl_item =
+      begin
+        require 'vault'
+        vault_client = Vault::Client.new(address: new_resource.hashicorp_vault_address, token: new_resource.hashicorp_vault_token)
+        vault_client.logical.read("#{new_resource.search_id}").data
+      rescue => e
+        raise e unless new_resource.ignore_missing
+        nil
+      end
   else
     fail "Unsupported data bag type #{new_resource.data_bag_type}"
   end
