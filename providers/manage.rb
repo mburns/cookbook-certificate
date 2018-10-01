@@ -109,7 +109,7 @@ def cert_file_resource(path, content, options = {})
     group new_resource.group
     mode(options[:private] ? 00640 : 00644)
     variables :file_content => content
-    only_if { content }
+    not_if { content.nil? }
     sensitive new_resource.sensitive if respond_to?(:sensitive)
   end
   new_resource.updated_by_last_action(true) if r.updated_by_last_action?
