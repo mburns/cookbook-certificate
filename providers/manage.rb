@@ -95,7 +95,7 @@ def cert_directory_resource(dir, options = {})
   r = directory ::File.join(new_resource.cert_path, dir) do
     owner new_resource.owner
     group new_resource.group
-    mode(options[:private] ? 00750 : 00755)
+    mode(options[:private] ? 00700 : 00755)
     recursive true
   end
   new_resource.updated_by_last_action(true) if r.updated_by_last_action?
@@ -107,7 +107,7 @@ def cert_file_resource(path, content, options = {})
     cookbook new_resource.cookbook
     owner new_resource.owner
     group new_resource.group
-    mode(options[:private] ? 00640 : 00644)
+    mode(options[:private] ? 00600 : 00644)
     variables :file_content => content
     only_if { content }
     sensitive new_resource.sensitive if respond_to?(:sensitive)
